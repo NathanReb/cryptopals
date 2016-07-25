@@ -4,6 +4,7 @@ let base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567
 let hex_val = String.index hex_chars
 let b64_val = String.index base64_chars
 
+let hex_chr code = hex_chars.[code]
 let b64_chr code = base64_chars.[code]
 
 let internal_of_hex str =
@@ -18,6 +19,14 @@ let internal_of_hex str =
 
 let of_hex str =
   if String.length str = 0 then Ok str else internal_of_hex str
+
+let to_hex str =
+  let open Char in
+  String.init
+    (String.length str * 2)
+    (fun i -> if i mod 2 = 0 then (code str.[i / 2]) / 16 |> hex_chr
+      else (code str.[i / 2]) mod 16 |> hex_chr)
+
 
 let get_opt str i = try Some str.[i] with Invalid_argument _ -> None
 
@@ -51,3 +60,12 @@ let to_base64 str =
       build_chr_list acc (i + 3)
   in
   build_chr_list [] 0 |> of_chr_list
+
+let xor s s' =
+  let open Char in
+  if String.length s <> String.length s' then
+    Error "Expecting same length strings"
+  else
+    Ok (String.init
+          (String.length s)
+          (fun i -> (code s.[i]) lxor (code s'.[i]) |> chr))
