@@ -5,7 +5,7 @@ let hex_val = String.index hex_chars
 let b64_val = String.index base64_chars
 
 let hex_chr code = hex_chars.[code]
-let b64_chr code = base64_chars.[code]
+let b64_chr code = base64_chars.[Unsigned.UInt8.to_int code]
 
 let internal_of_hex str =
   let open Char in
@@ -27,7 +27,6 @@ let to_hex str =
     (fun i -> if i mod 2 = 0 then (code str.[i / 2]) / 16 |> hex_chr
       else (code str.[i / 2]) mod 16 |> hex_chr)
 
-
 let get_opt str i = try Some str.[i] with Invalid_argument _ -> None
 
 let of_chr_list l =
@@ -35,16 +34,16 @@ let of_chr_list l =
   String.init (Array.length arr) (Array.get arr)
 
 let to_base64 str =
-  let open Char in
   let open Option in
-  let open Arith_8bit in
+  let code c = Unsigned.UInt8.of_int @@ Char.code c in
   let bytes_of c c_opt' c_opt'' =
-    let c' = Option.default (chr 0) c_opt' in
-    let c'' = Option.default (chr 0) c_opt'' in
-    let c1 = code c >> 2 |> b64_chr in
-    let c2 = (code c' >> 4) + (code c << 6 >> 2) |> b64_chr in
-    let c3 = c_opt' >>! fun c' -> (code c'' >> 6) + (code c' << 4 >> 2) |> b64_chr in
-    let c4 = c_opt'' >>! fun c'' -> code c'' << 2 >> 2 |> b64_chr in
+    let open Unsigned.UInt8.Infix in
+    let c' = Option.default (Char.chr 0) c_opt' in
+    let c'' = Option.default (Char.chr 0) c_opt'' in
+    let c1 = code c lsr 2 |> b64_chr in
+    let c2 = (code c' lsr 4) + ((code c lsl 6) lsr 2) |> b64_chr in
+    let c3 = c_opt' >>! fun c' -> (code c'' lsr 6) + ((code c' lsl 4) lsr 2) |> b64_chr in
+    let c4 = c_opt'' >>! fun c'' -> (code c'' lsl 2) lsr 2 |> b64_chr in
     [c1; c2; Option.default '=' c3; Option.default '=' c4]
   in
   let get = get_opt str in
