@@ -2,10 +2,12 @@ true: bin_annot
 true: safe_string
 true: debug
 
+true: package(containers)
 true: package(integers)
+true: package(ppx_deriving.std)
+true: package(result)
 
 "src": include
-"src/lib": include
 
 "tests": include
 

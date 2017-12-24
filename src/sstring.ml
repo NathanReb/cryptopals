@@ -29,22 +29,18 @@ let to_hex str =
 
 let get_opt str i = try Some str.[i] with Invalid_argument _ -> None
 
-let of_chr_list l =
-  let arr = Array.of_list l in
-  String.init (Array.length arr) (Array.get arr)
-
 let to_base64 str =
-  let open Option in
+  let open CCOpt.Infix in
   let code c = Unsigned.UInt8.of_int @@ Char.code c in
   let bytes_of c c_opt' c_opt'' =
     let open Unsigned.UInt8.Infix in
-    let c' = Option.default (Char.chr 0) c_opt' in
-    let c'' = Option.default (Char.chr 0) c_opt'' in
+    let c' = CCOpt.get_or ~default:(Char.chr 0) c_opt' in
+    let c'' = CCOpt.get_or ~default:(Char.chr 0) c_opt'' in
     let c1 = code c lsr 2 |> b64_chr in
     let c2 = (code c' lsr 4) + ((code c lsl 6) lsr 2) |> b64_chr in
-    let c3 = c_opt' >>! fun c' -> (code c'' lsr 6) + ((code c' lsl 4) lsr 2) |> b64_chr in
-    let c4 = c_opt'' >>! fun c'' -> (code c'' lsl 2) lsr 2 |> b64_chr in
-    [c1; c2; Option.default '=' c3; Option.default '=' c4]
+    let c3 = c_opt' >|= fun c' -> (code c'' lsr 6) + ((code c' lsl 4) lsr 2) |> b64_chr in
+    let c4 = c_opt'' >|= fun c'' -> (code c'' lsl 2) lsr 2 |> b64_chr in
+    [c1; c2; CCOpt.get_or ~default:'=' c3; CCOpt.get_or ~default:'=' c4]
   in
   let get = get_opt str in
   let l = String.length str in
@@ -58,7 +54,7 @@ let to_base64 str =
       in
       build_chr_list acc (i + 3)
   in
-  build_chr_list [] 0 |> of_chr_list
+  build_chr_list [] 0 |> CCString.of_list
 
 let xor s s' =
   let open Char in

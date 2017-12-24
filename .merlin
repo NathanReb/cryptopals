@@ -2,5 +2,7 @@ B _build/src
 B _build/src/**
 B _build/tests
 
+PKG containers
 PKG integers
+PKG ppx_deriving.std
 PKG oUnit
