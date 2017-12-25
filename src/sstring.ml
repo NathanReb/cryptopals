@@ -67,3 +67,6 @@ let fold f acc s =
     if i = String.length s then acc else aux (f acc s.[i]) (i + 1)
   in
   aux acc 0
+
+let single_byte_xor ~key s =
+  String.init (String.length s) (fun i -> Cchar.xor key s.[i])

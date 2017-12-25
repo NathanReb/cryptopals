@@ -63,10 +63,22 @@ let test_xor =
   ; "Different Length" >:: test "" "\x00" (Error "Expecting same length strings")
   ]
 
+let test_single_byte_xor =
+  let test ~key ~input ~expected ctxt =
+    let actual = Sstring.single_byte_xor ~key input in
+    assert_equal ~ctxt ~cmp:[%eq: string] ~printer:[%show: string] expected actual
+  in
+  "single_byte_xor" >:::
+  [ "Empty" >:: test ~key:'\xff' ~input:"" ~expected:""
+  ; "Null key" >:: test ~key:'\x00' ~input:"\x00\xff" ~expected:"\x00\xff"
+  ; "Normal" >:: test ~key:'\xff' ~input:"\x00\xff" ~expected:"\xff\x00"
+  ]
+
 let suite =
   "Sstring" >:::
   [ test_of_hex
   ; test_to_hex
   ; test_to_b64
   ; test_xor
+  ; test_single_byte_xor
   ]
