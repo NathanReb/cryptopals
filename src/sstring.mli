@@ -4,3 +4,5 @@ val to_hex : string -> string
 val to_base64 : string -> string
 
 val xor : string -> string -> (string, string) result
+
+val fold : ('a -> char -> 'a) -> 'a -> string -> 'a

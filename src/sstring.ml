@@ -64,3 +64,9 @@ let xor s s' =
     Ok (String.init
           (String.length s)
           (fun i -> (code s.[i]) lxor (code s'.[i]) |> chr))
+
+let fold f acc s =
+  let rec aux acc i =
+    if i = String.length s then acc else aux (f acc s.[i]) (i + 1)
+  in
+  aux acc 0
