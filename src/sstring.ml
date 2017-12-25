@@ -57,13 +57,10 @@ let to_base64 str =
   build_chr_list [] 0 |> CCString.of_list
 
 let xor s s' =
-  let open Char in
   if String.length s <> String.length s' then
     Error "Expecting same length strings"
   else
-    Ok (String.init
-          (String.length s)
-          (fun i -> (code s.[i]) lxor (code s'.[i]) |> chr))
+    Ok (String.init (String.length s) (fun i -> Cchar.xor s.[i] s'.[i]))
 
 let fold f acc s =
   let rec aux acc i =

@@ -1,17 +1,16 @@
-module T = CCMap.Make(CCChar)
-
-type t = float T.t
+type t = float Cchar.Map.t
 [@@deriving eq,ord]
 
 let show t =
-  [%show: (char * float) list] @@ T.bindings t
+  [%show: (char * float) list] @@ Cchar.Map.bindings t
 
 let pp fmt t =
   Format.pp_print_string fmt @@ show t
 
-let of_list = List.fold_left (fun acc (chr, freq) -> T.add chr freq acc) T.empty
+let of_list =
+  List.fold_left (fun acc (chr, freq) -> Cchar.Map.add chr freq acc) Cchar.Map.empty
 
-let empty = T.empty
+let empty = Cchar.Map.empty
 
 let english =
   of_list
@@ -43,24 +42,24 @@ let english =
     ; ('z', 0.074)
     ]
 
-let freq t char = T.get_or ~default:0. char t
+let freq t char = Cchar.Map.get_or ~default:0. char t
 
 let of_string s =
   let module M = Multiset.Make(Char) in
   let total = float @@ String.length s in
   let char_count = Sstring.fold (fun acc c -> M.add c acc) M.empty s in
   M.fold
-    (fun c i acc -> T.add c (float i /. total) acc)
+    (fun c i acc -> Cchar.Map.add c (float i /. total) acc)
     char_count
-    T.empty
+    Cchar.Map.empty
 
 let most_frequent_char t =
-  T.fold
+  Cchar.Map.fold
     ( fun char freq -> function
         | None -> Some (char, freq)
         | Some (c_max, f_max)
           ->
-            if freq > f_max then 
+            if freq > f_max then
               Some (char, freq)
             else
               Some (c_max, f_max)
