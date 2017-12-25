@@ -8,6 +8,7 @@ true: package(ppx_deriving.std)
 true: package(result)
 
 "src": include
+"src/lib": include
 
 "tests": include
 
