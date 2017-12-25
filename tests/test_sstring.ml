@@ -10,6 +10,7 @@ let test_of_hex =
     let actual = Sstring.of_hex input in
     assert_equal_string_result ~ctxt expected actual
   in
+  "of_hex" >:::
   [ "Empty" >:: test "" (Ok "")
   ; "Zero" >:: test "00" (Ok "\x00")
   ; "255" >:: test "ff" (Ok "\xff")
@@ -23,6 +24,7 @@ let test_to_hex =
     let actual = Sstring.to_hex input in
     assert_equal ~ctxt ~cmp:[%eq: string] ~printer:[%show: string] expected actual
   in
+  "to_hex" >:::
   [ "Empty" >:: test "" ""
   ; "Zero" >:: test "\x00" "00"
   ; "One" >:: test "\x01" "01"
@@ -35,6 +37,7 @@ let test_to_b64 =
     let actual = Sstring.to_base64 input in
     assert_equal ~ctxt ~cmp:[%eq: string] ~printer:[%show: string] expected actual
   in
+  "to_b64" >:::
   [ "Empty" >:: test "" ""
   ; "Zero" >:: test "\x00\x00\x00" "AAAA"
   ; "One" >:: test "\x00\x00\x01" "AAAB"
@@ -50,6 +53,7 @@ let test_xor =
     let actual = Sstring.xor input input' in
     assert_equal_string_result ~ctxt expected actual
   in
+  "xor" >:::
   [ "Empty" >:: test "" "" (Ok "")
   ; "Zero and zero" >:: test "\x00" "\x00" (Ok "\x00")
   ; "Zero and one" >:: test "\xff" "\x00" (Ok "\xff")
@@ -60,12 +64,9 @@ let test_xor =
   ]
 
 let suite =
-  [ "Hex" >:::
-    [ "Of" >::: test_of_hex
-    ; "To" >::: test_to_hex
-    ]
-  ; "Base64" >:::
-    [ "To" >::: test_to_b64
-    ]
-  ; "Xor" >::: test_xor
+  "Sstring" >:::
+  [ test_of_hex
+  ; test_to_hex
+  ; test_to_b64
+  ; test_xor
   ]

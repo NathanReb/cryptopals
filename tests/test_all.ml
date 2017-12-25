@@ -3,11 +3,11 @@ open OUnit2
 let suite =
   "All" >:::
   [ "Lib" >:::
-    [ "Sstring" >::: Test_sstring.suite
+    [ Test_sstring.suite
     ; Test_lexicon.suite
     ]
   ; "Challenges" >:::
-    [ "Set1" >::: Set1.suite
+    [ Set1.suite
     ]
   ]
 

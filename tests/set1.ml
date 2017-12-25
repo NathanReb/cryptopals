@@ -27,6 +27,7 @@ let challenge2 ctxt =
   assert_equal ~ctxt ~cmp ~printer expected actual
 
 let suite =
+  "Set 1" >:::
   [ "Base64" >:: challenge1
   ; "Xor" >:: challenge2
   ]
