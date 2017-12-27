@@ -5,6 +5,7 @@ let suite =
   [ "Lib" >:::
     [ Test_sstring.suite
     ; Test_lexicon.suite
+    ; Test_sstream.suite
     ]
   ; "Challenges" >:::
     [ Set1.suite

@@ -17,3 +17,9 @@ val most_frequent_char : t -> char option
     and a reference one. Just sums the distance between freq of
     each characters. *)
 val distance : reference: t -> t -> float
+
+(** Build a lexicon form a stream of strings *)
+val of_stream : string Stream.t -> t
+
+(** Build a lexicon from a text file. [\n] characters are ignored.*)
+val of_file : Ffile.Infile.t -> t

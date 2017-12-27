@@ -44,14 +44,20 @@ let english =
 
 let freq t char = Cchar.Map.get_or ~default:0. char t
 
-let of_string s =
-  let module M = Multiset.Make(Char) in
-  let total = float @@ String.length s in
-  let char_count = Sstring.fold (fun acc c -> M.add c acc) M.empty s in
-  M.fold
+let add_char_count mset s =
+  Sstring.fold (fun acc c -> Cchar.Multiset.add c acc) mset s
+
+let of_char_count_and_total char_count total =
+  let total = float total in
+  Cchar.Multiset.fold
     (fun c i acc -> Cchar.Map.add c (float i /. total) acc)
     char_count
     Cchar.Map.empty
+
+let of_string s =
+  let total = String.length s in
+  let char_count = add_char_count Cchar.Multiset.empty s in
+  of_char_count_and_total char_count total
 
 let most_frequent_char t =
   Cchar.Map.fold
@@ -76,3 +82,15 @@ let distance ~reference lexicon =
     )
     lexicon
     0.
+
+let of_stream stream =
+  let total, char_count =
+    Sstream.fold
+      (fun (total, char_count) s -> (total + String.length s, add_char_count char_count s))
+      (0, Cchar.Multiset.empty)
+      stream
+  in
+  of_char_count_and_total char_count total
+
+let of_file infile =
+  Ffile.with_in_line_stream infile of_stream
