@@ -67,3 +67,12 @@ let most_frequent_char t =
     t
     None
   |> CCOpt.map fst
+
+let distance ~reference lexicon =
+  Cchar.Map.fold
+    ( fun c f acc ->
+        let ref_freq = freq reference c in
+        acc +. (abs_float @@ ref_freq -. f)
+    )
+    lexicon
+    0.

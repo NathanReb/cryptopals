@@ -35,9 +35,25 @@ let test_of_string =
   ; "Long" >:: test "aaaabbcc" (Lexicon.of_list ['a', 0.5; 'b', 0.25; 'c', 0.25])
   ]
 
+let test_distance =
+  let test ~reference ~lexicon ~expected ctxt =
+    let actual = Lexicon.distance ~reference lexicon in
+    assert_equal ~ctxt ~cmp:[%eq: float] ~printer:[%show: float] expected actual
+  in
+  let open Lexicon in
+  "distance" >:::
+  [ "Empty" >:: test ~reference:(of_list ['a', 1.]) ~lexicon:empty ~expected:0.
+  ; "Equal" >:: test ~reference:(of_list ['a', 1.]) ~lexicon:(of_list ['a', 1.]) ~expected:0.
+  ; "Different" >:: test
+      ~reference:(of_list ['a', 0.5; 'b', 0.5; 'c', 0.])
+      ~lexicon:(of_list ['a', 0.; 'b', 0.5; 'c', 0.5])
+      ~expected:1.
+  ]
+
 let suite =
   "Lexicon" >:::
   [ test_freq
   ; test_most_frequent_char
   ; test_of_string
+  ; test_distance
   ]
