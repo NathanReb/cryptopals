@@ -21,4 +21,4 @@ check: test
 
 clean:
 	rm -rf _build
-	rm *.native
+	rm -rf *.native
