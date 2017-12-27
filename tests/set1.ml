@@ -26,8 +26,15 @@ let challenge2 ctxt =
   in
   assert_equal ~ctxt ~cmp ~printer expected actual
 
+let challenge3 ctxt =
+  let ciphertext = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736" in
+  let expected = "lol" in
+  let actual = Brute_force.single_byte_xor ~lexicon:Lexicon.english ~ciphertext in
+  assert_equal ~ctxt ~cmp:[%eq: string] ~printer:[%show: string] expected actual
+
 let suite =
   "Set 1" >:::
   [ "Base64" >:: challenge1
   ; "Xor" >:: challenge2
+  ; "Single byte xor" >:: challenge3
   ]
