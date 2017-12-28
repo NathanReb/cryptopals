@@ -83,14 +83,14 @@ let distance ~reference lexicon =
     lexicon
     0.
 
-let of_stream stream =
+let of_sequence sequence =
   let total, char_count =
-    Sstream.fold
+    Sequence.fold
       (fun (total, char_count) s -> (total + String.length s, add_char_count char_count s))
       (0, Cchar.Multiset.empty)
-      stream
+      sequence
   in
   of_char_count_and_total char_count total
 
 let of_file infile =
-  Ffile.with_in_line_stream infile of_stream
+  Ffile.with_in_line_sequence infile of_sequence

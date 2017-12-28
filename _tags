@@ -6,6 +6,7 @@ true: package(containers)
 true: package(integers)
 true: package(ppx_deriving.std)
 true: package(result)
+true: package(sequence)
 
 "src": include
 "src/lib": include

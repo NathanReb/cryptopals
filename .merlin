@@ -6,3 +6,4 @@ PKG containers
 PKG integers
 PKG ppx_deriving.std
 PKG oUnit
+PKG sequence

@@ -4,7 +4,7 @@ module Infile : sig
   val of_string : string -> (t, string) result
 end
 
-val with_in_line_stream :
+val with_in_line_sequence :
   Infile.t ->
-  (string Stream.t -> 'a) ->
+  (string Sequence.t -> 'a) ->
   'a

@@ -11,15 +11,15 @@ module Infile = struct
       Ok t
 end
 
-let read_as_line_stream in_channel =
-  Stream.from @@
-  fun _ ->
-  try Some (input_line in_channel)
-  with End_of_file -> None
+let rec read_as_line_sequence in_channel k =
+  let line = try Some (input_line in_channel) with End_of_file -> None in
+  match line with
+    | None -> ()
+    | Some l -> k l; read_as_line_sequence in_channel k
 
-let with_in_line_stream infile f =
+let with_in_line_sequence infile f =
   let in_channel = open_in infile in
-  let line_stream = read_as_line_stream in_channel in
-  let ret = f line_stream in
+  let line_sequence = read_as_line_sequence in_channel in
+  let ret = f line_sequence in
   close_in in_channel;
   ret

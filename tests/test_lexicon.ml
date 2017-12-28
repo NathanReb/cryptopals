@@ -50,16 +50,16 @@ let test_distance =
       ~expected:1.
   ]
 
-let test_of_stream =
-  let test stream expected ctxt =
-    let actual = Lexicon.of_stream stream in
+let test_of_sequence =
+  let test sequence expected ctxt =
+    let actual = Lexicon.of_sequence sequence in
     assert_equal ~ctxt ~cmp:[%eq: Lexicon.t] ~printer:[%show: Lexicon.t] expected actual
   in
   "of_stream" >:::
-  [ "Empty" >:: test (Stream.of_list []) Lexicon.empty
-  ; "One element" >:: test (Stream.of_list ["ab"]) (Lexicon.of_list ['a', 0.5; 'b', 0.5])
+  [ "Empty" >:: test (Sequence.empty) Lexicon.empty
+  ; "One element" >:: test (Sequence.of_list ["ab"]) (Lexicon.of_list ['a', 0.5; 'b', 0.5])
   ; "Two elements" >:: test
-      (Stream.of_list ["ab"; "cd"])
+      (Sequence.of_list ["ab"; "cd"])
       (Lexicon.of_list ['a', 0.25; 'b', 0.25; 'c', 0.25; 'd', 0.25])
   ]
 
@@ -69,5 +69,5 @@ let suite =
   ; test_most_frequent_char
   ; test_of_string
   ; test_distance
-  ; test_of_stream
+  ; test_of_sequence
   ]
