@@ -10,7 +10,9 @@ true: package(sequence)
 
 "src": include
 "src/lib": include
-
 "tests": include
+"tools": include
+"tools/lib": include
 
 <tests/*>: package(oUnit)
+<tools/**>: package(cmdliner)

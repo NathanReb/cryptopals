@@ -1,7 +1,10 @@
 B _build/src
 B _build/src/**
 B _build/tests
+B _build/tools
+B _build/tools/**
 
+PKG cmdliner
 PKG containers
 PKG integers
 PKG ppx_deriving.std
